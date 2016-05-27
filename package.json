@@ -1,6 +1,7 @@
 {
-	"name": "hackfmi7",
-	"dependencies": {
-		"express": "*"
-	}
+  "name": "hackfmi7",
+  "dependencies": {
+    "express": "*",
+    "request": "^2.72.0"
+  }
 }
