@@ -14,15 +14,15 @@ app.get('/analyze', function(req, res) {
           'Basic YWNjX2YxNGFjNGNkZDNhZjA3Mzo2ZGE4ZWE4MWQ3YjQyM2IyNWRmZTJiNDhmYTdjYWRlYw=='
     }
   };
-  var req = http.request(options, function(response) {
-    var str = '';
-    response.on('data', function(chunk) {
-      console.log("here");
-      str += chunk;
-    });
-    response.on('end', function() { res.send(str); });
-  });
-  req.end();
+  // var req = http.request(options, function(response) {
+  //   var str = '';
+  //   response.on('data', function(chunk) {
+  //     console.log("here");
+  //     str += chunk;
+  //   });
+  //   response.on('end', function() { res.send(str); });
+  // });
+  // req.end();
 });
 
 app.listen(3000);
