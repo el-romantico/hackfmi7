@@ -1,7 +1,10 @@
+var viewport = document.getElementById("viewport");
+
 var snapshot = document.getElementById("snapshot");
 var snapshotContext = snapshot.getContext("2d");
 
-var viewport = document.querySelector("#viewport");
+var overlay = document.getElementById("overlay");
+var overlayContext = overlay.getContext("2d");
 
 function handleVideo(stream) {
   viewport.src = window.URL.createObjectURL(stream);
@@ -10,12 +13,13 @@ function handleVideo(stream) {
 function snapIt(event) {
   snapshotContext.drawImage(viewport, 0, 0, snapshot.width, snapshot.height);
 
+  overlayContext.clearRect(0, 0, overlay.width, overlay.height);
   var messages = new Array();
   messages[0] = {time: 0, text: "PERSON", x: 90, y: 200};
   messages.forEach(function(message) {
-    snapshotContext.font = "22px Lato";
-    snapshotContext.fillStyle = "#000000";
-    snapshotContext.fillText(message.text, message.x, message.y);
+    overlayContext.font = "22px Lato";
+    overlayContext.fillStyle = "#000000";
+    overlayContext.fillText(message.text, message.x, message.y);
   });
 
   var image = snapshot.toDataURL();

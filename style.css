@@ -1,0 +1,14 @@
+#viewport, #overlay {
+	position: absolute;
+	left: 0px;
+}
+
+#snapshot {
+	position: absolute;
+	left: 640px;
+}
+
+#snap {
+	position: absolute;
+	top: 500px;
+}
