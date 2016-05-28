@@ -1,39 +1,53 @@
 var express = require('express');
 var app = express();
 var http = require('http');
+var fs = require("fs");
+var request = require('request');
+var apiKey = 'acc_f14ac4cdd3af073',
+var apiSecret = '6da8ea81d7b423b25dfe2b48fa7cadec';
+var tempImageName = "out.png"
+var imaggaContentUploadUrl = 'https://api.imagga.com/v1/content'
 
 app.use('/', express.static(__dirname));
 
 app.post('/analyze', function(req, res) {
   var imageAsBase64 = '';
   req.on('data', function(chunk) {
-    console.log("here");
     imageAsBase64 += chunk;
   });
   req.on('end', function() {
     var image = imageAsBase64.replace(/^data:image\/png;base64,/, "");
-    require("fs").writeFile("out.png", image, 'base64', function(err) {
+
+    fs.writeFileSync(tempImageName, image, 'base64', function(err) {
       console.log(err); // writes out file without error, but it's not a valid image
     });
 
-    res.send();
+    var formData = {
+          image: fs.createReadStream('./' + tempImageName)
+      };
+
+    request.post({url: imaggaContentUploadUrl, formData: formData}, function (error, response, body) {
+      var bd = JSON.parse(body);
+      if(bd.status == 'success') {
+        console.log('first success');
+        console.log('Response:', bd);
+
+        var imageUrl = 'https://api.imagga.com/v1/tagging?content=' + bd.uploaded[0].id;
+
+        request.get(imageUrl, function (error, response, body) {
+          console.log('double success');
+          console.log('Status:', response.statusCode);
+          console.log('Response:', body);
+
+          res.send(body);
+        }).auth(apiKey, apiSecret, true);
+      } else {
+        console.log('Status:', response.statusCode);
+        console.log('Response:', body);
+        res.send(body);
+      }
+    }).auth(apiKey, apiSecret, true);
   });
-
-  // var options = {
-  //     host: 'api.imagga.com',
-  //     path:
-  //         '/v1/tagging?url=http://imagga.com/static/images/tagging/wind-farm-538576_640.jpg',
-  //     headers: {
-  //       'Authorization':
-  //           'Basic YWNjX2YxNGFjNGNkZDNhZjA3Mzo2ZGE4ZWE4MWQ3YjQyM2IyNWRmZTJiNDhmYTdjYWRlYw=='
-  //     }
-  //   };
-
-
-  // var req = http.request(options, function(response) {
-
-  // });
-  // req.end();
 });
 
 app.listen(3000);
