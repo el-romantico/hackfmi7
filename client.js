@@ -58,19 +58,6 @@ function snapIt(event) {
     captionCoordinates[(captionsCount << 1) + 1] = message.y;
     captionsCount++;
   });
-
-  var image = snapshot.toDataURL();
-
-  var request = new XMLHttpRequest();
-  request.onreadystatechange = function() {
-    if (request.readyState == 4 && request.status == 200) {
-      var myArr = JSON.parse(request.responseText);
-      console.log(myArr.results[0].tags[0].tag);
-    }
-  };
-  request.open("POST", "http://127.0.0.1:3000/analyze", true);
-  request.setRequestHeader('Accept', 'application/json');
-  request.send(image);
 }
 
 /**
