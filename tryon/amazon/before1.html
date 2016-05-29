@@ -836,7 +836,8 @@ window.$Nav && $Nav.declare('configComplete');
     </div>
             <div class="a-row">
                 <div id="leftCol" class="a-column a-span4 softlines_left_column_ppd_vertical">
-    <div id="imageBlock_feature_div" class="feature" data-feature-name="imageBlock">
+    <div id="imageBlock_feature_div" class="feature" data-feature-name="imageBlock" style="margin-top:50px;">
+	 <img src="white.png" />
     </div>
     </div>
     <div class="a-column a-span8 softlines_right_column_ppd_vertical a-span-last">
@@ -845,12 +846,6 @@ window.$Nav && $Nav.declare('configComplete');
     <div id="titleBlock" class="feature" data-feature-name="titleBlock">
 <div id="titleBlockLeftSection" class="a-section a-spacing-none">
     <div id="brandByline_feature_div" class="feature" data-feature-name="brandByline">
-    <div class="a-section a-spacing-none">
-    <!-- Fix for tt- 0059914573 (Not a good practice. Added to accommodate for Pantry brandbyline viewdapter) -->
-                    <a id="brand" class="a-link-normal" href="http://www.amazon.com/Hanes/b/ref=w_bl_sl_l_b_ap_web_2593218011?ie=UTF8&amp;node=2593218011&amp;field-lbr_brands_browse-bin=Hanes">
-                        <img alt="" src="resources/2593218011._CB308835085_SR120,50_.jpg">
-                    </a>
-    </div>
     </div>
 </div>
 <div id="titleBlockRightSection" class="a-section a-spacing-none">
@@ -858,7 +853,7 @@ window.$Nav && $Nav.declare('configComplete');
 <div id="titleSection" class="a-section a-spacing-none">
     <h1 id="title" class="a-size-large a-spacing-none a-color-secondary">
       <span id="productTitle" class="a-size-large">
-                  Hanes Men's ComfortSoft T-Shirt (Pack of 4)
+                  White T-Shirt
       </span>
     </h1>
     <div id="expandTitleToggle" class="a-section a-spacing-none expand aok-hidden"></div>
@@ -896,24 +891,6 @@ window.$Nav && $Nav.declare('configComplete');
                         <span id="acrCustomerReviewText" class="a-size-base">1,467 customer reviews</span>
                     </a>
                 </span>
-                <script type="text/javascript">
-                    P.when('A', 'ready').execute(function(A) {
-                        A.declarative('acrLink-click-metrics', 'click', { "allowLinkDefault" : true }, function(event){
-                            if(window.ue) {
-                                ue.count("acrLinkClickCount", (ue.count("acrLinkClickCount") || 0) + 1);
-                            }
-                        });
-                    });
-                </script>
-            <script type="text/javascript">
-                P.when('A', 'cf').execute(function(A) {
-                    A.declarative('acrStarsLink-click-metrics', 'click', { "allowLinkDefault" : true },  function(event){
-                        if(window.ue) {
-                            ue.count("acrStarsLinkWithPopoverClickCount", (ue.count("acrStarsLinkWithPopoverClickCount") || 0) + 1);
-                        }
-                    });
-                });
-            </script>
         </div>
     </div>
     <div id="ask_feature_div" class="feature" data-feature-name="ask">
@@ -1136,92 +1113,6 @@ window.$Nav && $Nav.declare('configComplete');
 </div>            
     </div>
 </div>
-<script type="text/javascript">
-    P.when("jQuery", "cf").execute(function($){
-        P.when("A").execute(function(A) {
-            A.$("#fitRecommendationsLink").bind("click", function(event) {
-                event.preventDefault();
-            });
-        });
-    });
-    P.when('A', 'cf').execute("fitRecommendations", function(A) {
-    (function(A, $, ue) {
-        var fitRecSection = $("#fitRecommendationsSection");
-        var currentAsin = fitRecSection.attr("data-asin");
-        var urlBase = '/gp/customer-reviews/aj/metrics/log-values/ref=cm_cr_dp_fit_recommendations';
-        var urlQuotes = urlBase + "_quotes";
-        var urlHistogram = urlBase + "_histogram_click";
-        A.on("a:popover:afterShow:fitPopover-desktop", function(data) {
-            if (typeof(ue) === 'object' && typeof(ue.count) ==='function') {
-                var metricName = "CustomerReviews:FitPop-aui-clk-pagehit";
-                ue.count(metricName, 1);
-            }
-            A.post(urlBase + "_popover_click", {});
-            var fitQuotes = $('.fit-recommendations-quote');
-            if (fitQuotes.length > 0) {                    
-                A.post(urlQuotes + "_shown_" + fitQuotes.length);
-            }
-        });
-        if (typeof(ue) === 'object' && typeof(ue.count) ==='function') {
-            var metricName = "CustomerReviews:FitPop:aui:shown";
-            ue.count(metricName, 1);
-            A.post(urlBase + "_shown", {});
-        }
-        $('#fitRecommendationsPopover').bind('touchmove', function(e) {
-          e.preventDefault();
-        });
-        var submitFeedback = function(question, answer, retryLimit) {
-          var message = JSON.stringify([{question : question, answer : answer}]);
-          var params = {
-                        id                  : "DP-FitRecommendations-ajax",
-                        asin                : currentAsin,
-                        questionsAndAnswers : message,
-                        noCache             : A.now()
-                       };
-          var url = '/gp/customer-reviews/aj/fit-n-feel-experiment/submit-fit-feel-answer/ref=cm_cr_dp_fit_recommendations_';
-          url += (question == 'helpfulVote') ? 'vote' : 'comment';
-          var timeoutStart = 4000;
-          var submitWithRetries = function(params, attempts, retryLimit) {
-            retryLimit = retryLimit ? retryLimit : 3;
-            if (attempts > retryLimit) return;
-            var timeout = timeoutStart * attempts;
-            A.ajax(url, {
-                         method   : 'post', 
-                         params   : params, 
-                         timeout  : timeout,
-                         failure  : function() {
-                                      submitWithRetries(params, attempts + 1, retryLimit);;
-                                    }
-                        });
-          };
-          submitWithRetries(params, 1, retryLimit);
-        };
-        var vote = function(voteValue) {
-          var answerText = voteValue ? 'yes' : 'no';
-          submitFeedback('helpfulVote', answerText, 3);
-          $('#fitRecommendationVoteSection').hide();
-          $('#fitRecommendationVoteThankYou').show(function() {
-            $('#fitRecommendationsCommentContainer').show({easing: 'swing', complete: function() {
-              $('#fitRecommendationsComment').focus();
-            }});
-          });
-        };
-        $('#fitRecommendationsCommentSubmit').bind('click', function() {
-          submitFeedback('helpfulComment', $('#fitRecommendationsComment').val(), 3);
-          var helpfulContainer = $('#fitRecommendationsHelpfulContainer');
-          helpfulContainer.animate({height: helpfulContainer.height() + 'px'}, 0, function() {
-            $('#fitRecommendationsCommentContainer').hide(600);
-          });
-        });
-        $('#fitRecommendationVoteYes').bind('click', function() {
-          vote(true);
-        });
-        $('#fitRecommendationVoteNo').bind('click', function() {
-          vote(false);
-        });
-    })(A, A.$, ue);
-});
-</script>
         </div>
         <form id="twister" action="http://www.amazon.com/gp/product/handle-buy-box/ref=dp_start-bbf_1_glance" method="post" class="a-section a-spacing-small   ">
 <span id="twisterNonJsData"></span>
@@ -1233,12 +1124,6 @@ window.$Nav && $Nav.declare('configComplete');
                     </div>
         <span class="twister-dropdown-highlight transparentTwisterDropdownBorder">
         <span class="a-dropdown-container"><select name="dropdown_selected_size_name" autocomplete="off" data-a-touch-header="Size" id="native_dropdown_selected_size_name" class="a-native-dropdown">
-                <option value="-1" id="native_size_name_-1" data-a-id="size_name_-1" selected="">
-                            Select
-                </option>
-                <option value="0,B011A1S7BG" class="dropdownAvailable" data-a-css-class="dropdownAvailable" id="native_size_name_0" data-a-id="size_name_0" data-a-html-content="Small">
-                    Small
-                </option>
                 <option value="1,B011A1SB4E" class="dropdownAvailable" data-a-css-class="dropdownAvailable" id="native_size_name_1" data-a-id="size_name_1" data-a-html-content="Medium">
                     Medium
                 </option>
@@ -1285,12 +1170,7 @@ window.$Nav && $Nav.declare('configComplete');
     Size Chart
 </a>
         </span>
-<script type="text/javascript">
-P.when("jQuery", "cf").execute(function($){
-});
-</script>
                 </span>
-            <noscript>&lt;input type="image" src="http://g-ecx.images-amazon.com/images/G/01/buttons/update-page._CB192192236_.gif" alt="Update Button" name="submit.twisterUpdateButton_0"/&gt;</noscript>
             <input type="button" id="twisterUpdate_size_name" name="submit.twisterUpdateButton_0" class="a-hidden">
 </div>
 <div id="variation_color_name" class="a-section a-spacing-base variation-dropdown">
@@ -1545,71 +1425,4 @@ P.when("jQuery", "cf").execute(function($){
             </div>
 </div>
     </div></div>
-    
-    
-    <script src="../js/three.js"></script>
-		<script src="../js/loaders/OBJLoader.js"></script>
-
-		<script>
-			var container;
-			var camera, scene, renderer, controls;
-			var mouseX = 0, mouseY = 0;
-			var windowHalfX = window.innerWidth / 2;
-			var windowHalfY = window.innerHeight / 2;
-			init();
-			animate();
-			function init() {
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.z = 1600;
-
-				// scene
-				scene = new THREE.Scene();
-				var ambient = new THREE.AmbientLight( 0x101030 );
-				scene.add( ambient );
-				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-				directionalLight.position.set( 0, 0, 1 );
-				scene.add( directionalLight );
-				
-				var manager = new THREE.LoadingManager();
-				var loader = new THREE.OBJLoader(manager);
-
-				// model male02/male02
-				var loader = new THREE.OBJLoader( manager );
-				loader.load( '../data/obj/angel.obj', function ( object ) {
-					object.position.y = - 95;
-					scene.add( object );
-				}, function(xhr) {}, function(xhr) {});
-				//
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( 409, 250 );
-				container = document.getElementById("imageBlock_feature_div");
-				container.appendChild( renderer.domElement );
-				// document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-				//
-				window.addEventListener( 'resize', onWindowResize, false );
-			}
-			function onWindowResize() {
-				windowHalfX = window.innerWidth / 2;
-				windowHalfY = window.innerHeight / 2;
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize( window.innerWidth, window.innerHeight );
-			}
-			function onDocumentMouseMove( event ) {
-				mouseX = ( event.clientX - windowHalfX ) / 2;
-				mouseY = ( event.clientY - windowHalfY ) / 2;
-			}
-			//
-			function animate() {
-				requestAnimationFrame( animate );
-				render();
-			}
-			function render() {
-				// camera.position.x += ( mouseX - camera.position.x ) * .05;
-				// camera.position.y += ( - mouseY - camera.position.y ) * .05;
-				// camera.lookAt( scene.position );
-				renderer.render( scene, camera );
-			}
-		</script>
     </body></html>
